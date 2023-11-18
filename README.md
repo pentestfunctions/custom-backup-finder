@@ -30,6 +30,20 @@ git clone https://github.com/pentestfunctions/custom-backup-finder.git
 2. Enter the desired domain name when prompted.
 3. The script will generate a file `custom_backup_list.txt` with possible backup file names.
 
+## Example 🖥️
+```bash
+backup_dev.tar.bz2
+backup_dev.tar.xz
+backup_dev.7z
+backup_dev.rar
+backup_dev.sql
+backup_dev.bak
+backup_dev.dump
+backup_dev.gzip
+backup_dev.bz2
+backup_dev.gz
+```
+
 ## Contributing :raised_hands:
 Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/pentestfunctions/custom-backup-finder.py/issues).
 
