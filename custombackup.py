@@ -73,23 +73,18 @@ domain = input("Enter the domain name (e.g., example.com): ")
 common_permutations = itertools.product(archive_names, file_extensions)
 
 # Generate permutations with real dates
-date_permutations = []
+date_permutations = [
+    f"backup_{year:04d}{month:02d}{day:02d}{ext}"
+    for year in range(2022, 2023)  # Adjust the year range as needed
+    for month in range(1, 13)
+    for day in range(1, 31)  # Simplified day range handling
+    for ext in file_extensions
+]
 
-for year in range(2022, 2023):  # Adjust the year range as needed
-    for month in range(1, 13):
-        for day in range(1, 32):
-            for ext in file_extensions:
-                date_permutations.append(f"backup_{year:02d}{month:02d}{day:02d}{ext}")
-
-# Customized permutations for "example.com_backup" and "www.example.com_backup"
-custom_permutations = []
-for name in archive_names:
-    if name in ["example.com_backup", "www.example.com_backup"]:
-        for ext in file_extensions:
-            custom_permutations.append(f"{domain}_{name}{ext}")
-    else:
-        for ext in file_extensions:
-            custom_permutations.append(name + ext)
+# Customized permutations for the given domain
+custom_permutations = [
+    f"{domain}_{name}{ext}" for name in archive_names for ext in file_extensions
+]
 
 # Output the generated permutations to a file
 with open("custom_backup_list.txt", "w") as file:
