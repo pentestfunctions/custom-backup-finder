@@ -32,17 +32,41 @@ git clone https://github.com/pentestfunctions/custom-backup-finder.git
 
 ## Example 🖥️
 ```bash
-backup_dev.tar.bz2
-backup_dev.tar.xz
-backup_dev.7z
-backup_dev.rar
-backup_dev.sql
 backup_dev.bak
 backup_dev.dump
 backup_dev.gzip
 backup_dev.bz2
 backup_dev.gz
+hacknex_2024.zip
+hacknex_2024.tar
+hacknex_2024.tar.gz
+hacknex_2024.tgz
+hacknex_2024.tar.bz2
+hacknex_2024.tar.xz
 ```
+
+
+## Custom Logfinder
+1. Example custom commands with the input domain hacknex.us
+
+```bash
+202407211812_log.txt.log
+202407211812_log.txt.txt
+202407211812_log.txt.sql
+hacknex.us_202407211812.log.log
+hacknex.us_202407211812.log.txt
+hacknex.us_202407211812.log.sql
+www.hacknex.us_202407211812.log.log
+www.hacknex.us_202407211812.log.txt
+www.hacknex.us_202407211812.log.sql
+```
+
+## Other formats
+
+It is worth noting to also look for custom backups with this file name scheme
+`dbname_20221015_202410.sql.gz`
+
+wherein the dbname would be the database name if you have found it already.
 
 ## Contributing :raised_hands:
 Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/pentestfunctions/custom-backup-finder.py/issues).
