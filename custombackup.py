@@ -1,4 +1,5 @@
 import itertools
+import re
 
 # List of common archive names (excluding date-based)
 archive_names = [
@@ -46,6 +47,106 @@ archive_names = [
     "backup_staging",
     "backup_test",
     "backup_dev",
+    "example_2024",
+    "example_2024_full",
+    "example_2024_daily",
+    "example_2024_weekly",
+    "example_2024_monthly",
+    "example_2024_yearly",
+    "example_2024_db",
+    "example_2024_files",
+    "example_2024_media",
+    "example_2024_content",
+    "example_backup",
+    "example_full_backup",
+    "example_db_backup",
+    "example_files_backup",
+    "example_media_backup",
+    "example_content_backup",
+    "backup_2024_example",
+    "backup_2024_example_full",
+    "backup_2024_example_daily",
+    "backup_2024_example_weekly",
+    "backup_2024_example_monthly",
+    "backup_2024_example_yearly",
+    "backup_2024_example_db",
+    "backup_2024_example_files",
+    "backup_2024_example_media",
+    "backup_2024_example_content",
+    "example_full",
+    "example_daily",
+    "example_weekly",
+    "example_monthly",
+    "example_yearly",
+    "example_db",
+    "example_files",
+    "example_media",
+    "example_content",
+    "subdomain_example_2024",
+    "subdomain_example_2024_full",
+    "subdomain_example_2024_daily",
+    "subdomain_example_2024_weekly",
+    "subdomain_example_2024_monthly",
+    "subdomain_example_2024_yearly",
+    "subdomain_example_2024_db",
+    "subdomain_example_2024_files",
+    "subdomain_example_2024_media",
+    "subdomain_example_2024_content",
+    "subdomain_backup_2024_example",
+    "subdomain_backup_2024_example_full",
+    "subdomain_backup_2024_example_daily",
+    "subdomain_backup_2024_example_weekly",
+    "subdomain_backup_2024_example_monthly",
+    "subdomain_backup_2024_example_yearly",
+    "subdomain_backup_2024_example_db",
+    "subdomain_backup_2024_example_files",
+    "subdomain_backup_2024_example_media",
+    "subdomain_backup_2024_example_content",
+    "website_backup_example",
+    "website_backup_example_full",
+    "website_backup_example_daily",
+    "website_backup_example_weekly",
+    "website_backup_example_monthly",
+    "website_backup_example_yearly",
+    "website_backup_example_db",
+    "website_backup_example_files",
+    "website_backup_example_media",
+    "website_backup_example_content",
+    "site_backup_example",
+    "site_backup_example_full",
+    "site_backup_example_daily",
+    "site_backup_example_weekly",
+    "site_backup_example_monthly",
+    "site_backup_example_yearly",
+    "site_backup_example_db",
+    "site_backup_example_files",
+    "site_backup_example_media",
+    "site_backup_example_content",
+    "full_backup_example",
+    "full_backup_example_com",
+    "daily_backup_example",
+    "daily_backup_example_com",
+    "weekly_backup_example",
+    "weekly_backup_example_com",
+    "monthly_backup_example",
+    "monthly_backup_example_com",
+    "yearly_backup_example",
+    "yearly_backup_example_com",
+    "compressed_backup_example",
+    "compressed_backup_example_com",
+    "example_com_backup_daily",
+    "example_com_backup_weekly",
+    "example_com_backup_monthly",
+    "example_com_backup_yearly",
+    "example_com_backup_compressed",
+    "subdomain_example_com_backup_daily",
+    "subdomain_example_com_backup_weekly",
+    "subdomain_example_com_backup_monthly",
+    "subdomain_example_com_backup_yearly",
+    "subdomain_example_com_backup_compressed",
+    "full_example_com_backup_daily",
+    "full_example_com_backup_weekly",
+    "daily_example_com_backup",
 ]
 
 # List of common file extensions
@@ -66,53 +167,46 @@ file_extensions = [
     ".gz",
 ]
 
-# Function to split domain into base and TLD
-def split_domain(domain):
-    parts = domain.rsplit('.', 1)
-    if len(parts) == 2:
-        return parts[0], parts[1]
-    return domain, ''  # No TLD found
+# Get user input
+url = input("Enter the URL: ")
 
-# Get the domain input from the user
-domain_input = input("Enter the domain name (e.g., example.com): ")
-domain, tld = split_domain(domain_input)
+# Extract domain and subdomain
+domain_pattern = r"https?://(www\.)?(?P<subdomain>[\w-]+\.)?(?P<domain>[\w-]+\.\w+)"
+match = re.match(domain_pattern, url)
 
-# Custom domain variations
-domain_variations = [
-    f"{domain}_{tld}",  # domain_tld
-    f"{domain}{tld}",   # domaintld
+if not match:
+    raise ValueError("Invalid URL format")
+
+domain = match.group("domain")
+subdomain = match.group("subdomain")[:-1] if match.group("subdomain") else f"www.{domain}"
+
+# Generate domain variants
+domain_without_tld = domain.split('.')[0]
+subdomain_without_tld = subdomain.split('.')[0] if subdomain else domain_without_tld
+
+# Create a list of domain and subdomain variants
+replacements = [
+    (f"example_com", domain.replace(".", "_")),
+    (f"example.com", domain),
+    (f"example_", f"{domain_without_tld}_"),
+    (f"example_", f"{domain}_"),
+    (f"subdomain_example_", f"{subdomain_without_tld}_") if subdomain else (f"subdomain_example_", f"{domain_without_tld}_"),
+    (f"subdomain_example", subdomain_without_tld) if subdomain else (f"subdomain_example", domain_without_tld),
+    (f"subdomain_", f"{subdomain_without_tld}_") if subdomain else (f"subdomain_", f"{domain_without_tld}_")
 ]
 
-# Customized permutations for the given domain
-custom_permutations = []
-for variation in domain_variations:
-    for ext in file_extensions:
-        # Add domain variations with and without common archive names
-        custom_permutations.append(f"{variation}{ext}")
-        for name in archive_names:
-            custom_permutations.append(f"{variation}_{name}{ext}")
+# Apply replacements to archive names
+new_archive_names = []
+for name in archive_names:
+    for old, new in replacements:
+        name = name.replace(old, new)
+    new_archive_names.append(name)
 
-# Generate permutations of common archive names and file extensions
-common_permutations = itertools.product(archive_names, file_extensions)
+# Generate combinations of archive names and file extensions
+all_combinations = [f"{name}{ext}" for name, ext in itertools.product(new_archive_names, file_extensions)]
 
-# Generate permutations with real dates
-date_permutations = [
-    f"backup_{year:04d}{month:02d}{day:02d}{ext}"
-    for year in range(2022, 2023)
-    for month in range(1, 13)
-    for day in range(1, 31)
-    for ext in file_extensions
-]
+# Save to a wordlist called custom_backupfinder.txt
+with open("custom_backupfinder.txt", "w") as file:
+    file.write("\n".join(all_combinations))
 
-# Output the generated permutations to a file
-with open("custom_backup_list.txt", "w") as file:
-    for name, extension in common_permutations:
-        file.write(f"{name}{extension}\n")
-
-    for date in date_permutations:
-        file.write(f"{date}\n")
-
-    for custom_name in custom_permutations:
-        file.write(f"{custom_name}\n")
-
-print("Permutations have been written to custom_backup_list.txt.")
+print("Wordlist saved to custom_backupfinder.txt")
